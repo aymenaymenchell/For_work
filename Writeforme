@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة المساعدة في كتابة الامتحانات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF9F4;
+    --paper:#FFFFFF;
+    --ink:#1C2B29;
+    --primary:#2C5F5A;
+    --primary-dark:#1E4642;
+    --primary-tint:#E9F2EE;
+    --accent:#C97A2B;
+    --muted:#748482;
+    --border:#E4DECD;
+    --danger:#AE4E3B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Tajawal', sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:640px;margin:0 auto;padding:0 20px 70px;}
+
+  header.hero{
+    padding:40px 20px 0;
+    text-align:center;
+    background:linear-gradient(180deg,#F2ECDD 0%,var(--bg) 100%);
+    border-bottom:1px solid var(--border);
+  }
+  .hero-inner{max-width:520px;margin:0 auto;padding-bottom:28px;}
+  header.hero .eyebrow{
+    font-size:0.82rem;
+    font-weight:700;
+    color:var(--primary);
+    margin-bottom:10px;
+  }
+  header.hero h1{
+    font-family:'Aref Ruqaa', serif;
+    font-size:2.15rem;
+    margin:0 0 14px;
+    color:var(--primary-dark);
+    font-weight:700;
+  }
+  header.hero p{
+    margin:0 auto;
+    color:var(--ink);
+    font-size:0.98rem;
+    opacity:0.85;
+  }
+  .stats-row{
+    display:flex;
+    gap:10px;
+    margin-top:26px;
+  }
+  .stat-box{
+    flex:1;
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:9px;
+    padding:14px 8px;
+  }
+  .stat-box .num{
+    font-size:1.4rem;
+    font-weight:900;
+    color:var(--primary-dark);
+    display:block;
+  }
+  .stat-box .lbl{
+    font-size:0.76rem;
+    color:var(--muted);
+  }
+
+  nav.tabs{
+    display:flex;
+    gap:6px;
+    margin:26px 0 22px;
+    border-bottom:2px solid var(--border);
+  }
+  nav.tabs button{
+    flex:1;
+    padding:12px 4px;
+    background:none;
+    border:none;
+    font-family:'Tajawal',sans-serif;
+    font-size:0.88rem;
+    font-weight:700;
+    color:var(--muted);
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    margin-bottom:-2px;
+    transition:color .15s;
+  }
+  nav.tabs button.active{
+    color:var(--primary-dark);
+    border-bottom-color:var(--accent);
+  }
+
+  section.panel{display:none;}
+  section.panel.active{display:block;}
+
+  .card{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:26px 24px;
+    margin-bottom:18px;
+    box-shadow:0 1px 2px rgba(28,43,41,0.04);
+  }
+  .card h2{
+    font-size:1.08rem;
+    margin:0 0 6px;
+    color:var(--primary-dark);
+  }
+  .card > .desc{
+    font-size:0.86rem;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+
+  .field-group{
+    margin-top:20px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+  }
+  .field-group:first-of-type{margin-top:22px;padding-top:0;border-top:none;}
+  .field-group > label.group-title{
+    display:block;
+    font-size:0.88rem;
+    font-weight:700;
+    color:var(--primary-dark);
+    margin-bottom:4px;
+  }
+  .field-group > .hint{
+    font-size:0.8rem;
+    color:var(--muted);
+    margin-bottom:12px;
+  }
+
+  label.field-label{
+    display:block;
+    font-size:0.86rem;
+    font-weight:700;
+    color:var(--primary-dark);
+    margin:16px 0 6px;
+  }
+  label.field-label:first-child{margin-top:0;}
+
+  input[type=text], select{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    font-family:'Tajawal',sans-serif;
+    font-size:0.94rem;
+    background:#FDFCF9;
+    color:var(--ink);
+  }
+  input:focus, select:focus{
+    outline:2px solid var(--accent);
+    outline-offset:1px;
+  }
+
+  .days-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:8px;
+  }
+  .day-chip{
+    text-align:center;
+    padding:11px 4px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    cursor:pointer;
+    font-size:0.85rem;
+    font-weight:700;
+    color:var(--muted);
+    user-select:none;
+    background:#FDFCF9;
+  }
+  .day-chip.picked{
+    background:var(--primary);
+    color:#fff;
+    border-color:var(--primary);
+  }
+
+  .slots-list{display:flex;flex-direction:column;gap:10px;}
+  .slot-row{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    background:#FDFCF9;
+    border:1px solid var(--border);
+    border-radius:8px;
+    padding:8px 10px;
+  }
+  .slot-row select{flex:1;}
+  .slot-row span.sep{color:var(--muted);font-size:0.82rem;white-space:nowrap;}
+  .slot-remove{
+    background:none;
+    border:none;
+    color:var(--danger);
+    font-size:1.1rem;
+    cursor:pointer;
+    padding:2px 6px;
+    line-height:1;
+  }
+  .add-slot-btn{
+    margin-top:10px;
+    background:none;
+    border:1px dashed var(--muted);
+    color:var(--primary-dark);
+    border-radius:8px;
+    padding:9px;
+    width:100%;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:0.85rem;
+    cursor:pointer;
+  }
+  .add-slot-btn:hover{border-color:var(--primary);}
+
+  button.submit{
+    margin-top:26px;
+    width:100%;
+    padding:14px;
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    border-radius:8px;
+    font-family:'Tajawal',sans-serif;
+    font-weight:700;
+    font-size:0.98rem;
+    cursor:pointer;
+  }
+  button.submit:hover{background:var(--primary-dark);}
+  button.submit:disabled{background:var(--muted);cursor:default;}
+
+  .note{
+    font-size:0.8rem;
+    color:var(--muted);
+    margin-top:12px;
+    line-height:1.7;
+  }
+
+  .status-msg{
+    margin-top:14px;
+    padding:11px 14px;
+    border-radius:8px;
+    font-size:0.88rem;
+    display:none;
+  }
+  .status-msg.ok{display:block;background:var(--primary-tint);color:var(--primary-dark);}
+  .status-msg.err{display:block;background:#F6E7E3;color:var(--danger);}
+
+  .filter-row{display:flex;gap:8px;margin-bottom:20px;}
+  .filter-row select{flex:1;}
+
+  .person-card{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-right:4px solid var(--accent);
+    border-radius:10px;
+    padding:18px 20px;
+    margin-bottom:12px;
+  }
+  .person-card h3{
+    margin:0 0 4px;
+    font-size:1.02rem;
+    color:var(--primary-dark);
+  }
+  .person-card .sub{
+    color:var(--muted);
+    font-size:0.85rem;
+    margin-bottom:10px;
+  }
+  .person-card .days-line{
+    font-size:0.82rem;
+    color:var(--ink);
+    margin-bottom:3px;
+  }
+  .person-card .slots-line{
+    font-size:0.82rem;
+    color:var(--ink);
+  }
+  .person-card .contact{
+    margin-top:10px;
+    font-size:0.87rem;
+    font-weight:700;
+    color:var(--primary);
+  }
+  .empty-state{
+    text-align:center;
+    padding:44px 10px;
+    color:var(--muted);
+    font-size:0.9rem;
+  }
+  .loading{
+    text-align:center;
+    padding:34px;
+    color:var(--muted);
+  }
+  footer{
+    text-align:center;
+    padding:26px 20px 10px;
+    color:var(--muted);
+    font-size:0.78rem;
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">مبادرة تطوعية طلابية</div>
+    <h1>يد توصل يد</h1>
+    <p>منصة إلكترونية تربط الطلبة ذوي الإعاقة البصرية المحتاجين إلى مساعدة في كتابة الامتحانات، بالمتطوعين المستعدين لتقديم هذه المساعدة داخل الجامعات.</p>
+    <div class="stats-row">
+      <div class="stat-box"><span class="num" id="stat-students">—</span><span class="lbl">طالب مسجّل</span></div>
+      <div class="stat-box"><span class="num" id="stat-volunteers">—</span><span class="lbl">متطوع مسجّل</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="student">تسجيل الطلبة</button>
+    <button class="tab-btn" data-tab="volunteer">تسجيل المتطوعين</button>
+    <button class="tab-btn" data-tab="browse">قائمة المتطوعين</button>
+  </nav>
+
+  <!-- STUDENT REGISTRATION -->
+  <section class="panel active" id="panel-student">
+    <div class="card">
+      <h2>طلب مساعدة في كتابة الامتحان</h2>
+      <p class="desc">يُرجى تعبئة البيانات التالية بدقة لتسهيل عملية التواصل مع المتطوعين.</p>
+
+      <div class="field-group">
+        <label class="field-label">الاسم الكامل</label>
+        <input type="text" id="s-name">
+
+        <label class="field-label">الجامعة</label>
+        <input type="text" id="s-univ">
+
+        <label class="field-label">الكلية</label>
+        <input type="text" id="s-fac">
+
+        <label class="field-label">الاختصاص</label>
+        <input type="text" id="s-spec">
+      </div>
+
+      <div class="field-group">
+        <label class="group-title">الأيام التي تحتاج فيها إلى مساعدة</label>
+        <div class="hint">يمكن اختيار أكثر من يوم واحد</div>
+        <div class="days-grid" id="s-days">
+          <div class="day-chip" data-day="السبت">السبت</div>
+          <div class="day-chip" data-day="الأحد">الأحد</div>
+          <div class="day-chip" data-day="الاثنين">الاثنين</div>
+          <div class="day-chip" data-day="الثلاثاء">الثلاثاء</div>
+          <div class="day-chip" data-day="الأربعاء">الأربعاء</div>
+          <div class="day-chip" data-day="الخميس">الخميس</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="group-title">الفترات الزمنية التي تحتاج فيها إلى مساعدة</label>
+        <div class="hint">يمكن إضافة أكثر من فترة زمنية في اليوم الواحد</div>
+        <div class="slots-list" id="s-slots"></div>
+        <button type="button" class="add-slot-btn" data-target="s-slots">إضافة فترة زمنية أخرى</button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">وسيلة التواصل (رقم الهاتف أو البريد الإلكتروني)</label>
+        <input type="text" id="s-contact">
+      </div>
+
+      <button class="submit" id="s-submit">إتمام التسجيل</button>
+      <div class="status-msg" id="s-status"></div>
+      <p class="note">تظهر هذه البيانات في قائمة يطّلع عليها المتطوعون لغرض التواصل المباشر. يُرجى عدم إدراج أي معلومة لا ترغب في نشرها.</p>
+    </div>
+  </section>
+
+  <!-- VOLUNTEER REGISTRATION -->
+  <section class="panel" id="panel-volunteer">
+    <div class="card">
+      <h2>التسجيل كمتطوع</h2>
+      <p class="desc">يُرجى تعبئة البيانات التالية بدقة لتسهيل عملية التواصل مع الطلبة المحتاجين إلى مساعدة.</p>
+
+      <div class="field-group">
+        <label class="field-label">الاسم الكامل</label>
+        <input type="text" id="v-name">
+
+        <label class="field-label">الجامعة</label>
+        <input type="text" id="v-univ">
+
+        <label class="field-label">الكلية</label>
+        <input type="text" id="v-fac">
+
+        <label class="field-label">الاختصاص</label>
+        <input type="text" id="v-spec">
+      </div>
+
+      <div class="field-group">
+        <label class="group-title">الأيام التي يمكنك تقديم المساعدة فيها</label>
+        <div class="hint">يمكن اختيار أكثر من يوم واحد</div>
+        <div class="days-grid" id="v-days">
+          <div class="day-chip" data-day="السبت">السبت</div>
+          <div class="day-chip" data-day="الأحد">الأحد</div>
+          <div class="day-chip" data-day="الاثنين">الاثنين</div>
+          <div class="day-chip" data-day="الثلاثاء">الثلاثاء</div>
+          <div class="day-chip" data-day="الأربعاء">الأربعاء</div>
+          <div class="day-chip" data-day="الخميس">الخميس</div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="group-title">الفترات الزمنية التي يمكنك تقديم المساعدة فيها</label>
+        <div class="hint">يمكن إضافة أكثر من فترة زمنية في اليوم الواحد، كأن تكون متاحاً صباحاً وبعد الظهر</div>
+        <div class="slots-list" id="v-slots"></div>
+        <button type="button" class="add-slot-btn" data-target="v-slots">إضافة فترة زمنية أخرى</button>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">وسيلة التواصل (رقم الهاتف أو البريد الإلكتروني)</label>
+        <input type="text" id="v-contact">
+      </div>
+
+      <button class="submit" id="v-submit">إتمام التسجيل</button>
+      <div class="status-msg" id="v-status"></div>
+      <p class="note">تظهر هذه البيانات في قائمة يطّلع عليها الطلبة المحتاجون إلى مساعدة لغرض التواصل المباشر.</p>
+    </div>
+  </section>
+
+  <!-- BROWSE -->
+  <section class="panel" id="panel-browse">
+    <div class="filter-row">
+      <select id="b-role">
+        <option value="volunteer">المتطوعون</option>
+        <option value="student">الطلبة المحتاجون إلى مساعدة</option>
+      </select>
+      <select id="b-day">
+        <option value="">جميع الأيام</option>
+        <option value="السبت">السبت</option>
+        <option value="الأحد">الأحد</option>
+        <option value="الاثنين">الاثنين</option>
+        <option value="الثلاثاء">الثلاثاء</option>
+        <option value="الأربعاء">الأربعاء</option>
+        <option value="الخميس">الخميس</option>
+      </select>
+    </div>
+    <div id="b-list"><div class="loading">جاري التحميل...</div></div>
+  </section>
+
+</div>
+
+<footer>منصة يد توصل يد — للتواصل الطلابي التطوعي</footer>
+
+<script>
+const HOURS = [];
+for(let h=8; h<=21; h++){ HOURS.push(h+":00"); }
+
+function hourOptions(defaultVal){
+  return HOURS.map(h => `<option value="${h}" ${h===defaultVal?'selected':''}>${h}</option>`).join('');
+}
+
+function createSlotRow(defaultFrom, defaultTo){
+  const row = document.createElement('div');
+  row.className = 'slot-row';
+  row.innerHTML = `
+    <select class="slot-from">${hourOptions(defaultFrom)}</select>
+    <span class="sep">إلى</span>
+    <select class="slot-to">${hourOptions(defaultTo)}</select>
+    <button type="button" class="slot-remove" title="حذف الفترة">×</button>
+  `;
+  row.querySelector('.slot-remove').addEventListener('click', ()=>{
+    const list = row.parentElement;
+    if(list.children.length > 1){ row.remove(); }
+  });
+  return row;
+}
+
+function initSlotsList(containerId, defaultFrom, defaultTo){
+  const container = document.getElementById(containerId);
+  container.appendChild(createSlotRow(defaultFrom, defaultTo));
+}
+initSlotsList('s-slots', '9:00', '12:00');
+initSlotsList('v-slots', '9:00', '12:00');
+
+document.querySelectorAll('.add-slot-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    const container = document.getElementById(btn.dataset.target);
+    container.appendChild(createSlotRow('14:00', '16:00'));
+  });
+});
+
+function getSlots(containerId){
+  const rows = document.querySelectorAll('#'+containerId+' .slot-row');
+  return Array.from(rows).map(r => ({
+    from: r.querySelector('.slot-from').value,
+    to: r.querySelector('.slot-to').value
+  }));
+}
+
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab === 'browse'){ loadBrowseList(); }
+  });
+});
+
+// Day chips
+document.querySelectorAll('.days-grid').forEach(row=>{
+  row.querySelectorAll('.day-chip').forEach(chip=>{
+    chip.addEventListener('click', ()=> chip.classList.toggle('picked'));
+  });
+});
+
+function getPickedDays(rowId){
+  return Array.from(document.querySelectorAll('#'+rowId+' .day-chip.picked')).map(c=>c.dataset.day);
+}
+
+function showStatus(elId, msg, ok){
+  const el = document.getElementById(elId);
+  el.textContent = msg;
+  el.className = 'status-msg ' + (ok ? 'ok' : 'err');
+}
+
+async function getIndex(){
+  let idxRes;
+  try{ idxRes = await window.storage.get('index', true); }catch(e){ idxRes = null; }
+  let ids = [];
+  if(idxRes && idxRes.value){
+    try{ ids = JSON.parse(idxRes.value); }catch(e){ ids = []; }
+  }
+  return ids;
+}
+
+async function submitEntry(role, fields, days, slots, statusElId, btnEl){
+  if(!fields.name || !fields.univ || !fields.fac || !fields.spec || !fields.contact){
+    showStatus(statusElId, 'يُرجى استكمال جميع الحقول قبل التسجيل.', false);
+    return;
+  }
+  if(days.length === 0){
+    showStatus(statusElId, 'يُرجى اختيار يوم واحد على الأقل.', false);
+    return;
+  }
+  const originalText = btnEl.textContent;
+  btnEl.disabled = true;
+  btnEl.textContent = 'جارٍ التسجيل...';
+  try{
+    const id = role + '_' + Date.now();
+    const entry = {...fields, days, slots, role, id};
+    const res = await window.storage.set('entry:'+id, JSON.stringify(entry), true);
+    if(!res){ throw new Error('save failed'); }
+    const ids = await getIndex();
+    ids.push(id);
+    await window.storage.set('index', JSON.stringify(ids), true);
+
+    showStatus(statusElId, 'تم تسجيلك بنجاح، وأصبحت بياناتك ظاهرة في قائمة ' + (role==='student' ? 'الطلبة' : 'المتطوعين') + '.', true);
+    updateStats();
+  }catch(e){
+    showStatus(statusElId, 'حدث خطأ أثناء التسجيل، يُرجى المحاولة مجدداً.', false);
+  }finally{
+    btnEl.textContent = originalText;
+    btnEl.disabled = false;
+  }
+}
+
+document.getElementById('s-submit').addEventListener('click', ()=>{
+  const fields = {
+    name: document.getElementById('s-name').value.trim(),
+    univ: document.getElementById('s-univ').value.trim(),
+    fac: document.getElementById('s-fac').value.trim(),
+    spec: document.getElementById('s-spec').value.trim(),
+    contact: document.getElementById('s-contact').value.trim(),
+  };
+  submitEntry('student', fields, getPickedDays('s-days'), getSlots('s-slots'), 's-status', document.getElementById('s-submit'));
+});
+
+document.getElementById('v-submit').addEventListener('click', ()=>{
+  const fields = {
+    name: document.getElementById('v-name').value.trim(),
+    univ: document.getElementById('v-univ').value.trim(),
+    fac: document.getElementById('v-fac').value.trim(),
+    spec: document.getElementById('v-spec').value.trim(),
+    contact: document.getElementById('v-contact').value.trim(),
+  };
+  submitEntry('volunteer', fields, getPickedDays('v-days'), getSlots('v-slots'), 'v-status', document.getElementById('v-submit'));
+});
+
+document.getElementById('b-role').addEventListener('change', loadBrowseList);
+document.getElementById('b-day').addEventListener('change', loadBrowseList);
+
+async function fetchAllEntries(){
+  const ids = await getIndex();
+  const entries = [];
+  for(const id of ids){
+    try{
+      const r = await window.storage.get('entry:'+id, true);
+      if(r && r.value){ entries.push(JSON.parse(r.value)); }
+    }catch(e){ /* missing entry, skip */ }
+  }
+  return entries;
+}
+
+async function updateStats(){
+  try{
+    const entries = await fetchAllEntries();
+    document.getElementById('stat-students').textContent = entries.filter(e=>e.role==='student').length;
+    document.getElementById('stat-volunteers').textContent = entries.filter(e=>e.role==='volunteer').length;
+  }catch(e){
+    document.getElementById('stat-students').textContent = '0';
+    document.getElementById('stat-volunteers').textContent = '0';
+  }
+}
+updateStats();
+
+async function loadBrowseList(){
+  const listEl = document.getElementById('b-list');
+  listEl.innerHTML = '<div class="loading">جاري التحميل...</div>';
+  const role = document.getElementById('b-role').value;
+  const day = document.getElementById('b-day').value;
+  try{
+    const entries = await fetchAllEntries();
+    let filtered = entries.filter(e => e.role === role);
+    if(day){ filtered = filtered.filter(e => e.days.includes(day)); }
+
+    if(filtered.length === 0){
+      listEl.innerHTML = '<div class="empty-state">لا توجد نتائج مطابقة لهذا الفلتر حالياً.</div>';
+      return;
+    }
+
+    listEl.innerHTML = filtered.reverse().map(e => {
+      const slotsText = (e.slots || []).map(s => `من ${s.from} إلى ${s.to}`).join('، ');
+      return `
+      <div class="person-card">
+        <h3>${escapeHtml(e.name)}</h3>
+        <div class="sub">${escapeHtml(e.univ)} · ${escapeHtml(e.fac)} · ${escapeHtml(e.spec)}</div>
+        <div class="days-line">الأيام المتاحة: ${e.days.join('، ')}</div>
+        <div class="slots-line">الفترات الزمنية: ${slotsText || '—'}</div>
+        <div class="contact">وسيلة التواصل: ${escapeHtml(e.contact)}</div>
+      </div>
+    `;}).join('');
+  }catch(e){
+    listEl.innerHTML = '<div class="empty-state">حدث خطأ أثناء تحميل القائمة، يُرجى المحاولة مجدداً.</div>';
+  }
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+</script>
+
+</body>
+</html>
