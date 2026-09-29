@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>منصة المساعدة في كتابة الامتحانات</title>
+<title>اكتبلي</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
@@ -321,7 +321,7 @@
 <header class="hero">
   <div class="hero-inner">
     <div class="eyebrow">مبادرة تطوعية طلابية</div>
-    <h1>يد توصل يد</h1>
+    <h1>اكتبلي</h1>
     <p>منصة إلكترونية تربط الطلبة ذوي الإعاقة البصرية المحتاجين إلى مساعدة في كتابة الامتحانات، بالمتطوعين المستعدين لتقديم هذه المساعدة داخل الجامعات.</p>
     <div class="stats-row">
       <div class="stat-box"><span class="num" id="stat-students">—</span><span class="lbl">طالب مسجّل</span></div>
@@ -462,7 +462,7 @@
 
 </div>
 
-<footer>منصة يد توصل يد — للتواصل الطلابي التطوعي</footer>
+<footer>منصة اكتبلي — للتواصل الطلابي التطوعي</footer>
 
 <script>
 const HOURS = [];
